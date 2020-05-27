@@ -1,12 +1,23 @@
-#!/usr/bin/env
+# -*- coding: utf-8 -*-
 
 """
-This version: January 2019
+This script modifies the script created by Autor et al. (2019)
 
-Citation: 
-Autor, David, David Dorn, Gordon H. Hanson, Gary Pisano, and Pian Shu, "Foreign Competition and Domestic Innovation: Evidence from U.S. Patents," NBER Working Paper No. 22879, December 2016.
+Note that the input file should be in csv format and should contain the
+firm ID in first column ("assignee_id" or just "id") and a search key (firm name)
+in a second column. The program will insert quotation marks around the key and
+search the key on Bing. Only N top results are retrieved from Bing (see API params
+that are hard-coded in this script).
 
-Note that the input file should be in csv and should contain the firm ID and up to four search keys (each key as a separate column). The program will insert quotation marks around each key (each key can contain multiple words) and search the keys combined (e.g., "KEY 1" "KEY 2" "KEY 3" "KEY 4"). Our matching used one key for each firm, which is the punctuation-free assignee (or firm) name.
+Usage from command line:
+
+python bing_asgsearch.py <input.csv> <startRow> <endRow>
+
+Where startRow and endRow indicate what rows of input.csv the script should use.
+
+
+See original implementation at:
+Autor, David, David Dorn, Gordon H. Hanson, Gary Pisano, and Pian Shu, 􏰄Foreign Competition and Domestic Innovation: Evidence from U.S. Patents,􏰅 NBER Working Paper No. 22879, December 2016.
 """
 
 import urllib
@@ -19,61 +30,64 @@ import csv, string, re, sys
 import datetime
 import time
 
+# Search API params
+debug = False # display runtime messages?
+limit = 5 # number of search results to retrieve with query
+sleepSecs = 1 # time to wait between queries
+
+
 start_index = int(sys.argv[2])
 end_index = int(sys.argv[3])
 input_names = open(str(sys.argv[1]), 'rU')
-output_file = open('output' + '_' + str(start_index) + '_' + str(end_index) + '.csv', 'w')
+file_name = 'output' + '_' + str(start_index) + '_' + str(end_index) + '.csv'
+output_file = open(file_name, 'w')
 reader = csv.reader(input_names)
 data = [row for row in reader]
 input_names.close()
 writer = csv.writer(output_file)
-writer.writerow(['assignee_id', 'key1', 'key2', 'key3', 'key4', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
+writer.writerow(['id', 'key', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
 
-print_counter = start_index
+row_counter = start_index
 for row in data[start_index : end_index]:
     new_row = []
     write = True
     counter = 0
     record_id = ''
-    key1 = ''
-    key2 = ''
-    key3 = ''
-    key4 = ''
+    firm_name = ''
 
-    if row[0] == 'assignee_id':
+    if (row[0] == 'assignee_id' or row[0] == 'id'):
         continue
     for s in row:
         if counter == 0:
             record_id = s
             counter += 1
         elif counter == 1:
-            key1 = s
-            counter += 1
-        elif counter == 2:
-            key2 = s
-            counter += 1
-        elif counter == 3:
-            key3 = s
-            counter += 1
-        elif counter == 4:
-            key4 = s 
+            firm_name = s
             counter += 1
         else:
             break
-    keywords = [key1, key2, key3, key4]
-    search_str = '%s: %s, %s, %s, %s' % (record_id, key1, key2, key3, key4)
+
+    keywords = [firm_name]
+    search_str = '%s: %s' % (record_id, firm_name)
 
     start = 0
     ts = time.time()
     track_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 
-    print print_counter
-    print "Starting searches for %s %s %s %s (%s)... this may take a while." % (key1, key2, key3, key4, record_id)
+    if debug:
+        print "Searching #%s %s (%s)..." % (row_counter + 1, firm_name, record_id)
+    else:
+        sys.stdout.write('.')
+        sys.stdout.flush()
 
-    query = "\"" + key1 + "\" \"" + key2 + "\" \"" + key3 + "\" \"" + key4 + "\"" 
+    query = "\"" + firm_name + "\""
 
-    links = bing_searchweb.get_all_links(query)
-    print_counter += 1
+    links = bing_searchweb.get_all_links(query, limit)
+    if debug:
+        print "Got %s results" % (len(links) / limit)
+
+    time.sleep(sleepSecs)
+    row_counter += 1
 
     new_row = [record_id]
 
@@ -83,5 +97,9 @@ for row in data[start_index : end_index]:
     for link in links:
         new_row.append(link)
     writer.writerow(new_row)
+
 output_file.close()
- 
+
+print "\nDone."
+print "Results are in %s" % (file_name)
+

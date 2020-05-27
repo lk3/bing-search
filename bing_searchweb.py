@@ -13,10 +13,14 @@ import urllib2
 import json
 import config
 
-def get_all_links(query):
+def get_all_links(query, limit):
+
+    if limit is None:
+        limit = 1
+
     key = config.cognitiveServicesKey
     query = urllib.quote(query)
-    url = 'https://fuzzy-script.cognitiveservices.azure.com/bingcustomsearch/v7.0/search?customconfig='+config.customConfig+'&q=%27'+query+'%27&count=5'
+    url = 'https://fuzzy-script.cognitiveservices.azure.com/bingcustomsearch/v7.0/search?customconfig='+config.customConfig+'&q=%27'+query+'%27&count='+str(limit)
     try:
         # API request
         request = urllib2.Request(url)
