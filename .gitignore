@@ -5,3 +5,4 @@ __pycache__/bing_searchweb.cpython-37.pyc
 bing_searchweb.pyc
 config.py
 config.pyc
+.DS_Store
