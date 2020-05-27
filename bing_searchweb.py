@@ -20,7 +20,7 @@ def get_all_links(query, limit):
 
     key = config.cognitiveServicesKey
     query = urllib.quote(query)
-    url = 'https://fuzzy-script.cognitiveservices.azure.com/bingcustomsearch/v7.0/search?customconfig='+config.customConfig+'&q=%27'+query+'%27&count='+str(limit)
+    url = config.endPoint+'/search?customconfig='+config.customConfig+'&q=%27'+query+'%27&count='+str(limit)
     try:
         # API request
         request = urllib2.Request(url)
@@ -29,7 +29,10 @@ def get_all_links(query, limit):
         response = request_opener.open(request)
         response_data = response.read()
         json_result = json.loads(response_data)
-        result_list = json_result['webPages']['value']
+        result_list = []
+        if json_result.has_key('webPages'):
+            if json_result['webPages'].has_key('value'):
+                result_list = json_result['webPages']['value']
         # print result_list
         links = []
         for result in result_list:
