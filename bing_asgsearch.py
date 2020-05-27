@@ -84,7 +84,7 @@ for row in data[start_index : end_index]:
     links = bing_searchweb.get_all_links(query, limit)
     results_count = len(links) / 3 # 3 props: link, title, descr
     if debug:
-        print "Got %s results" % (len(links) / limit)
+        print "Got %s results" % (results_count)
 
     time.sleep(sleepSecs)
     row_counter += 1
