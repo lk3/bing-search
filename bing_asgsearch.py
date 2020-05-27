@@ -67,7 +67,6 @@ for row in data[start_index : end_index]:
         else:
             break
 
-    keywords = [firm_name]
     search_str = '%s: %s' % (record_id, firm_name)
 
     start = 0
@@ -83,6 +82,7 @@ for row in data[start_index : end_index]:
     query = "\"" + firm_name + "\""
 
     links = bing_searchweb.get_all_links(query, limit)
+    results_count = len(links) / 3 # 3 props: link, title, descr
     if debug:
         print "Got %s results" % (len(links) / limit)
 
@@ -93,6 +93,8 @@ for row in data[start_index : end_index]:
 
     for keyword in keywords:
         new_row.append(keyword)
+    new_row.append(firm_name)
+    new_row.append(results_count)
 
     for link in links:
         new_row.append(link)
