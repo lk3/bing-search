@@ -35,6 +35,7 @@ debug = False # display runtime messages?
 limit = 5 # number of search results to retrieve with query
 sleepSecs = 1 # time to wait between queries
 
+report_every_n_records = 1000 # report progress to terminal every N records
 
 start_index = int(sys.argv[2])
 end_index = int(sys.argv[3])
@@ -48,6 +49,7 @@ writer = csv.writer(output_file)
 writer.writerow(['id', 'key', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
 
 row_counter = start_index
+report_counter = 0
 for row in data[start_index : end_index]:
     new_row = []
     write = True
@@ -83,11 +85,17 @@ for row in data[start_index : end_index]:
 
     links = bing_searchweb.get_all_links(query, limit)
     results_count = len(links) / 3 # 3 props: link, title, descr
+    report_counter += 1
+
     if debug:
         print "Got %s results" % (results_count)
+    else:
+        if (report_counter == report_every_n_records):
+            print "%s rows processed" % (report_counter)
+            report_counter=0
 
     time.sleep(sleepSecs)
-    row_counter += 1
+    row_counter+=1
 
     new_row = [record_id]
     new_row.append(firm_name)
