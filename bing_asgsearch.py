@@ -90,9 +90,6 @@ for row in data[start_index : end_index]:
     row_counter += 1
 
     new_row = [record_id]
-
-    for keyword in keywords:
-        new_row.append(keyword)
     new_row.append(firm_name)
     new_row.append(results_count)
 
