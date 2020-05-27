@@ -46,7 +46,7 @@ reader = csv.reader(input_names)
 data = [row for row in reader]
 input_names.close()
 writer = csv.writer(output_file)
-writer.writerow(['id', 'key', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
+writer.writerow(['id', 'key', 'count', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
 
 row_counter = start_index
 report_counter = 0
