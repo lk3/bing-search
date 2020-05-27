@@ -33,8 +33,7 @@ import time
 # Search API params
 debug = False # display runtime messages?
 limit = 5 # number of search results to retrieve with query
-sleepSecs = 1 # time to wait between queries
-
+sleepSecs = 0.01 # time to wait between queries
 report_every_n_records = 1000 # report progress to terminal every N records
 
 start_index = int(sys.argv[2])
