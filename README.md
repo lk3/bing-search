@@ -9,5 +9,6 @@ Using your "<cognitiveServicesKey>" parameter from the Cognitive Services resour
 ```
 cognitiveServicesKey = "<cognitiveServicesKey>"
 customConfig = "<customConfig>"
+endPoint = "<endPoint>"
 
 ```
