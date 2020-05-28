@@ -33,7 +33,7 @@ import time
 # Search API params
 debug = False # display runtime messages?
 limit = 5 # number of search results to retrieve with query
-sleepSecs = 0.01 # time to wait between queries
+# sleepSecs = 1 # time to wait between queries
 report_every_n_records = 1000 # report progress to terminal every N records
 
 start_index = int(sys.argv[2])
@@ -47,9 +47,24 @@ input_names.close()
 writer = csv.writer(output_file)
 writer.writerow(['id', 'key', 'count', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
 
+def millis():
+    return int(round(time.time() * 1000))
+
 row_counter = start_index
 report_counter = 0
+millis_start = 1590606347000 # any time in the past
+time_between_calls = 10 # 1000 # millisecs between calls
+safety_margin = 3 # 300 # about 30%
 for row in data[start_index : end_index]:
+    s = 0
+    millis_now = millis()
+    diff = millis_now - millis_start
+    if (diff < time_between_calls):
+        print "%s %s" % (time_between_calls, diff)
+        s = (time_between_calls - diff + safety_margin) / float(1000)
+        print "sleeping %s millisecs" % (s)
+
+    time.sleep(s)
     new_row = []
     write = True
     counter = 0
@@ -83,6 +98,7 @@ for row in data[start_index : end_index]:
     query = "\"" + firm_name + "\""
 
     links = bing_searchweb.get_all_links(query, limit)
+    millis_start = millis()
     results_count = len(links) / 3 # 3 props: link, title, descr
     report_counter += 1
 
@@ -93,7 +109,7 @@ for row in data[start_index : end_index]:
             print "%s rows processed" % (report_counter)
             report_counter=0
 
-    time.sleep(sleepSecs)
+    # time.sleep(# sleepSecs)
     row_counter+=1
 
     new_row = [record_id]
