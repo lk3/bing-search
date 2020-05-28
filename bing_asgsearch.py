@@ -30,6 +30,7 @@ import csv, string, re, sys
 import datetime
 import time
 
+
 # Search API params
 debug = False # display runtime messages?
 resultsLimit = 5 # number of search results to retrieve with query
@@ -47,16 +48,28 @@ input_names.close()
 writer = csv.writer(output_file)
 writer.writerow(['id', 'key', 'count', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
 
+# @sleep_and_retry
+# @limits(calls=1, period=2)
+# def get_all_links(q, c):
+#     print "Calling"
+#     return bing_searchweb.get_all_links(q, c)
+
+
 def millis():
     return int(round(time.time() * 1000))
 
 print datetime.datetime.utcnow().strftime("%H:%M:%S.%f")
+
 row_counter = start_index
 report_counter = 0
+
 millis_start = 1590606347000 # any time in the past
 time_between_calls = 10 # 1000 # millisecs between calls
 safety_margin = 3 # 300 # about 30%
+
+
 for row in data[start_index : end_index]:
+
     s = 0
     millis_now = millis()
     diff = millis_now - millis_start
@@ -66,6 +79,7 @@ for row in data[start_index : end_index]:
         print "sleeping %s millisecs" % (s)
 
     time.sleep(s)
+
     new_row = []
     write = True
     counter = 0
@@ -86,20 +100,17 @@ for row in data[start_index : end_index]:
 
     search_str = '%s: %s' % (record_id, firm_name)
 
-    start = 0
-    ts = time.time()
-    track_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-
     if debug:
         print "Searching #%s %s (%s)..." % (row_counter + 1, firm_name, record_id)
-    else:
-        sys.stdout.write('.')
-        sys.stdout.flush()
+    # else:
+    #     sys.stdout.write('.')
+    #     sys.stdout.flush()
 
     query = "\"" + firm_name + "\""
 
-    links = bing_searchweb.get_all_links(query, limit)
     millis_start = millis()
+    links = bing_searchweb.get_all_links(query, resultsLimit)
+    # links = get_all_links(query, resultsLimit)
     results_count = len(links) / 3 # 3 props: link, title, descr
     report_counter += 1
 
@@ -126,4 +137,3 @@ output_file.close()
 print datetime.datetime.utcnow().strftime("%H:%M:%S.%f")
 print "\nDone."
 print "Results are in %s" % (file_name)
-
