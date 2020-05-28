@@ -50,6 +50,7 @@ writer.writerow(['id', 'key', 'count', 'link1', 'title1', 'description1', 'link2
 def millis():
     return int(round(time.time() * 1000))
 
+print datetime.datetime.utcnow().strftime("%H:%M:%S.%f")
 row_counter = start_index
 report_counter = 0
 millis_start = 1590606347000 # any time in the past
@@ -122,6 +123,7 @@ for row in data[start_index : end_index]:
 
 output_file.close()
 
+print datetime.datetime.utcnow().strftime("%H:%M:%S.%f")
 print "\nDone."
 print "Results are in %s" % (file_name)
 
