@@ -11,7 +11,10 @@ Run the script like this:
 python bing_asgsearch.py <input.csv> <startRow> <endRow> <free|s2>
 ```
 
-Last parameter (config name) should match the section name of the config file (see below).
+input.csv: path to csv input file with format: ID in 1st column, search key in 2nd column
+startRow: starts processing from this csv row
+endRow: stops processing at this csv row
+Last parameter (config name): should match the section name of the config file (see below).
 
 
 ### config.py file
