@@ -11,7 +11,7 @@ that are hard-coded in this script).
 
 Usage from command line:
 
-python bing_asgsearch.py <input.csv> <startRow> <endRow>
+python bing_asgsearch.py <input.csv> <startRow> <endRow> <free|s2>
 
 Where startRow and endRow indicate what rows of input.csv the script should use.
 
@@ -29,6 +29,9 @@ import bing_searchweb
 import csv, string, re, sys
 import datetime
 import time
+from configparser import ConfigParser
+parser = ConfigParser()
+parser.read('config.cfg')
 
 
 # Search API params
@@ -39,6 +42,7 @@ report_every_n_records = 1000 # report progress to terminal every N records
 
 start_index = int(sys.argv[2])
 end_index = int(sys.argv[3])
+cfg = sys.argv[4] or 'free'
 input_names = open(str(sys.argv[1]), 'rU')
 file_name = 'output' + '_' + str(start_index) + '_' + str(end_index) + '.csv'
 output_file = open(file_name, 'w')
@@ -59,6 +63,7 @@ def millis():
     return int(round(time.time() * 1000))
 
 print datetime.datetime.utcnow().strftime("%H:%M:%S.%f")
+print "Using config version '%s'" % (cfg)
 
 row_counter = start_index
 report_counter = 0
@@ -66,6 +71,7 @@ report_counter = 0
 millis_start = 1590606347000 # any time in the past
 time_between_calls = 10 # 1000 # millisecs between calls
 safety_margin = 3 # 300 # about 30%
+millisBetweenCalls = parser.getint(cfg, 'millisBetweenCalls')
 
 
 for row in data[start_index : end_index]:
