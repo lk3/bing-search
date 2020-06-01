@@ -11,16 +11,22 @@ Autor, David, David Dorn, Gordon H. Hanson, Gary Pisano, and Pian Shu, 􏰄Forei
 import urllib
 import urllib2
 import json
-import config
+from configparser import ConfigParser
+parser = ConfigParser()
 
-def get_all_links(query, limit):
+
+def get_all_links(query, limit, cfg):
+
+    parser.read('config.cfg')
 
     if limit is None:
         limit = 1
 
-    key = config.cognitiveServicesKey
+    key = parser.get(cfg, 'cognitiveServicesKey')
+    endPoint = parser.get(cfg, 'endPoint')
+    customConfig = parser.get(cfg, 'customConfig')
     query = urllib.quote(query)
-    url = config.endPoint+'/search?customconfig='+config.customConfig+'&q=%27'+query+'%27&count='+str(limit)
+    url = endPoint+'/search?customconfig='+customConfig+'&q=%27'+query+'%27&count='+str(limit)
     try:
         request = urllib2.Request(url)
         request.add_header('Ocp-Apim-Subscription-Key', key)
