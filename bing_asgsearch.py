@@ -62,11 +62,14 @@ writer.writerow(['id', 'key', 'count', 'link1', 'title1', 'description1', 'link2
 def millis():
     return int(round(time.time() * 1000))
 
-print datetime.datetime.utcnow().strftime("%H:%M:%S.%f")
+
+print "Start time: %s" % (datetime.datetime.utcnow().strftime("%H:%M:%S.%f"))
 print "Using config version '%s'" % (cfg)
+
 
 row_counter = start_index
 report_counter = 0
+batch_counter = 1
 
 millis_start = 1590606347000 # any time in the past
 time_between_calls = 10 # 1000 # millisecs between calls
@@ -123,12 +126,12 @@ for row in data[start_index : end_index]:
     if debug:
         print "Got %s results" % (results_count)
     else:
-        if (report_counter == report_every_n_records):
-            print "%s rows processed" % (report_counter)
-            report_counter=0
+        if (report_counter == batch_size):
+            print "%s rows processed" % (report_counter * batch_counter)
+            report_counter = 0
+            batch_counter += 1
 
-    # time.sleep(# sleepSecs)
-    row_counter+=1
+    row_counter += 1
 
     new_row = [record_id]
     new_row.append(firm_name)
@@ -140,6 +143,9 @@ for row in data[start_index : end_index]:
 
 output_file.close()
 
-print datetime.datetime.utcnow().strftime("%H:%M:%S.%f")
+# Done.
+if (report_counter > 0):
+    print "%s rows processed" % (report_counter)
+print "End time: %s" % (datetime.datetime.utcnow().strftime("%H:%M:%S.%f"))
 print "\nDone."
 print "Results are in %s" % (file_name)
