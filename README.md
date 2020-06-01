@@ -2,6 +2,8 @@
 
 ## Requirements
 
+Python 2.7 and modules in requirements.txt.
+
 
 ## Running the script
 
@@ -16,15 +18,15 @@ These are the required parameters:
 ```
 input.csv: path to csv input file with format: ID in 1st column, search key in 2nd column
 
-startRow: starts processing from this csv row
+startRow: starts processing from this csv row number
 
-endRow: stops processing at this csv row
+endRow: stops processing at this csv row number
 
 Last parameter (config name): should match the section name of the config file (see below).
 ```
 
 
-### config.py file
+### config.cfg file
 
 Create a config.cfg file in this repo root like this:
 
