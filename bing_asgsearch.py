@@ -52,11 +52,6 @@ input_names.close()
 writer = csv.writer(output_file)
 writer.writerow(['id', 'key', 'count', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
 
-# @sleep_and_retry
-# @limits(calls=1, period=2)
-# def get_all_links(q, c):
-#     print "Calling"
-#     return bing_searchweb.get_all_links(q, c)
 
 
 def millis():
@@ -79,14 +74,14 @@ millisBetweenCalls = parser.getint(cfg, 'millisBetweenCalls')
 
 for row in data[start_index : end_index]:
 
+    # small ad-hoc routine to sleep online the necessary to avoid API's too many calls error
     s = 0
     millis_now = millis()
     diff = millis_now - millis_start
-    if (diff < time_between_calls):
-        print "%s %s" % (time_between_calls, diff)
-        s = (time_between_calls - diff + safety_margin) / float(1000)
+    if (diff < millisBetweenCalls):
+        print "%s %s" % (millisBetweenCalls, diff)
+        s = (millisBetweenCalls - diff + safety_margin) / float(1000)
         print "sleeping %s millisecs" % (s)
-
     time.sleep(s)
 
     new_row = []
@@ -118,7 +113,6 @@ for row in data[start_index : end_index]:
     query = "\"" + firm_name + "\""
 
     millis_start = millis()
-    # links = get_all_links(query, resultsLimit)
     results_count = len(links) / 3 # 3 props: link, title, descr
     links = bing_searchweb.get_all_links(query, resultsLimit, cfg)
     report_counter += 1
