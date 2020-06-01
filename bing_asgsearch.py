@@ -118,9 +118,9 @@ for row in data[start_index : end_index]:
     query = "\"" + firm_name + "\""
 
     millis_start = millis()
-    links = bing_searchweb.get_all_links(query, resultsLimit)
     # links = get_all_links(query, resultsLimit)
     results_count = len(links) / 3 # 3 props: link, title, descr
+    links = bing_searchweb.get_all_links(query, resultsLimit, cfg)
     report_counter += 1
 
     if debug:
