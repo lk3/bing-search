@@ -50,8 +50,13 @@ reader = csv.reader(input_names)
 data = [row for row in reader]
 input_names.close()
 writer = csv.writer(output_file)
-writer.writerow(['id', 'key', 'count', 'link1', 'title1', 'description1', 'link2', 'title2', 'description2', 'link3', 'title3', 'description3', 'link4', 'title4', 'description4', 'link5', 'title5', 'description5'])
 
+firstRow = ['id', 'key', 'count']
+for item in range(1, resultsLimit + 1):
+    firstRow.append('link' + str(item))
+    firstRow.append('title' + str(item))
+
+writer.writerow(firstRow)
 
 
 def millis():
