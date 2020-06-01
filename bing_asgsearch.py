@@ -33,12 +33,9 @@ from configparser import ConfigParser
 parser = ConfigParser()
 parser.read('config.cfg')
 
-
-# Search API params
 debug = False # display runtime messages?
-resultsLimit = 5 # number of search results to retrieve with query
-# sleepSecs = 1 # time to wait between queries
-report_every_n_records = 1000 # report progress to terminal every N records
+resultsLimit = 10 # number of search results to retrieve with query
+batch_size = 1000 # report progress to terminal every N records
 
 start_index = int(sys.argv[2])
 end_index = int(sys.argv[3])
@@ -72,9 +69,8 @@ report_counter = 0
 batch_counter = 1
 
 millis_start = 1590606347000 # any time in the past
-time_between_calls = 10 # 1000 # millisecs between calls
-safety_margin = 3 # 300 # about 30%
 millisBetweenCalls = parser.getint(cfg, 'millisBetweenCalls')
+safety_margin = millisBetweenCalls * .3 # about 30%
 
 
 for row in data[start_index : end_index]:
@@ -118,8 +114,8 @@ for row in data[start_index : end_index]:
     query = "\"" + firm_name + "\""
 
     millis_start = millis()
-    results_count = len(links) / 3 # 3 props: link, title, descr
     links = bing_searchweb.get_all_links(query, resultsLimit, cfg)
+    results_count = len(links) / 2 # 2 props: link, title
     report_counter += 1
 
     if debug:
