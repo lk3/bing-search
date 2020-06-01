@@ -22,7 +22,6 @@ def get_all_links(query, limit):
     query = urllib.quote(query)
     url = config.endPoint+'/search?customconfig='+config.customConfig+'&q=%27'+query+'%27&count='+str(limit)
     try:
-        # API request
         request = urllib2.Request(url)
         request.add_header('Ocp-Apim-Subscription-Key', key)
         request_opener = urllib2.build_opener()
@@ -33,16 +32,18 @@ def get_all_links(query, limit):
         if json_result.has_key('webPages'):
             if json_result['webPages'].has_key('value'):
                 result_list = json_result['webPages']['value']
-        # print result_list
         links = []
         for result in result_list:
+            # link field
             if u'url' in result.viewkeys():
                  links.append(result[u'url'].encode('utf-8'))
+            # title field
             if u'name' in result.viewkeys():
                 links.append(result[u'name'].encode('utf-8'))
-            if u'snippet' in result.viewkeys():
-                links.append(result[u'snippet'].encode('utf-8'))
+            # description field
+            # if u'snippet' in result.viewkeys():
+            #    links.append(result[u'snippet'].encode('utf-8'))
     except urllib2.HTTPError as e:
-        links=["ERROR", e,"","","","","","","","","",""]
+        links=["ERROR", e]
 
     return links
