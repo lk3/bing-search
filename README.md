@@ -28,7 +28,7 @@ Last parameter (config name): should match the section name of the config file (
 
 ### config.cfg file
 
-Create a config.cfg file in this repo root like this:
+Create a config.cfg file with this format in the same directory where the script is:
 
 ```
 # Free version of Bing API
