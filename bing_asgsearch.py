@@ -122,7 +122,7 @@ for row in data[start_index : end_index]:
         print "Got %s results" % (results_count)
     else:
         if (report_counter == batch_size):
-            print "%s rows processed" % (report_counter * batch_counter)
+            print "%s rows processed" % (batch_size * batch_counter)
             report_counter = 0
             batch_counter += 1
 
@@ -140,7 +140,7 @@ output_file.close()
 
 # Done.
 if (report_counter > 0):
-    print "%s rows processed" % (report_counter)
+    print "%s rows processed" % ((batch_size * (batch_counter - 1)) + report_counter)
 print "End time: %s" % (datetime.datetime.utcnow().strftime("%H:%M:%S.%f"))
 print "\nDone."
 print "Results are in %s" % (file_name)
