@@ -1,6 +1,9 @@
-venv/*
-bing-search.sublime-project
 bing-search.sublime-workspace
+bing-search.sublime-project
 .DS_Store
 config.cfg
 *.pyc
+venv/*
+/resources
+*.csv
+*.zip
