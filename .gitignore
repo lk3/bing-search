@@ -1,4 +1,9 @@
-venv/*
-bing-search.sublime-project
 bing-search.sublime-workspace
-__pycache__/bing_searchweb.cpython-37.pyc
+bing-search.sublime-project
+.DS_Store
+config.cfg
+*.pyc
+venv/*
+/resources
+*.csv
+*.zip
